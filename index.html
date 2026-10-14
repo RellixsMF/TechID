@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ustozlar davomati · Face ID</title>
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+<style>
+:root{--bg:#eef6f3;--card:#fff;--tx:#0b2a24;--mut:#5f7a73;--pri:#059669;--pri2:#0d9488;--ok:#059669;--late:#d97706;--no:#e11d48;--sab:#7c3aed;--early:#ea580c;--done:#64748b;--bd:#d3e6df;--sh:0 6px 22px rgba(5,80,60,.08);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#06161a;--card:#0e2328;--tx:#e3f3ee;--mut:#8fb0a8;--bd:#1d3d42;--sh:none}}
+:root[data-theme="dark"]{--bg:#06161a;--card:#0e2328;--tx:#e3f3ee;--mut:#8fb0a8;--bd:#1d3d42;--sh:none}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:30px}
+button,input{font:inherit;color:inherit}svg{flex:none}
+.top{display:flex;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(120deg,#047857,#0d9488);color:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:7}
+.brand{display:flex;align-items:center;gap:10px;flex:1;min-width:0}.brand b{display:block;font-size:16px;line-height:1.15}.brand small{display:block;margin-top:3px}
+.lg{width:38px;height:38px;border-radius:12px;background:#ffffff2b;display:grid;place-items:center}
+.clk{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;background:#00000026;padding:6px 10px;border-radius:10px}
+.ib{background:#ffffff26;border:0;color:#fff;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;cursor:pointer}
+.fchip,.fchip2{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:3px 9px;border-radius:20px;background:#ffffff26}
+.wrap{max-width:940px;margin:0 auto;padding:12px 14px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--bd);padding:4px;border-radius:14px;margin-bottom:12px}
+.seg button{border:0;background:transparent;border-radius:11px;padding:10px 4px;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;font-weight:600;color:var(--mut)}
+.seg .on{background:var(--card);color:var(--pri);box-shadow:var(--sh)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.btn{background:linear-gradient(135deg,#059669,#0d9488);color:#fff;border:0;border-radius:12px;padding:12px 16px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;flex:1}
+.btn.o{background:linear-gradient(135deg,#ea580c,#f59e0b)}.btn.g{background:transparent;color:var(--tx);border:1px solid var(--bd)}.btn.r{background:var(--no);flex:0}.btn.s{padding:8px 10px;font-size:13px;flex:0}.btn.w{width:100%}
+input{background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:12px;width:100%;outline:none}input:focus{border-color:var(--pri)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.mut{color:var(--mut);font-size:13px}
+.rule{font-size:13px;color:var(--mut);display:flex;align-items:center;gap:6px;flex:1;min-width:200px}.rule b{color:var(--tx)}
+.tl{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-bottom:12px}
+.tl div{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px;text-align:center;box-shadow:var(--sh)}.tl b{display:block;font-size:24px;line-height:1.1}.tl span{font-size:12px;color:var(--mut)}
+.tr{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--bd);border-left:6px solid var(--bd);border-radius:14px;padding:10px;margin-bottom:8px;box-shadow:var(--sh)}
+.s-ok{border-left-color:var(--ok)}.s-late{border-left-color:var(--late)}.s-no{border-left-color:var(--no)}.s-sab{border-left-color:var(--sab)}
+.av{width:54px;height:54px;border-radius:14px;object-fit:cover;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(135deg,#059669,#0891b2)}
+.nm{flex:1;min-width:0;font-weight:700}.ln{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:4px;font-weight:500}
+.bd{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:8px;color:#fff}.bd.ok{background:var(--ok)}.bd.late{background:var(--late)}.bd.no{background:var(--no)}.bd.sab{background:var(--sab)}.bd.early{background:var(--early)}.bd.done{background:var(--done)}
+.tm{display:inline-flex;align-items:center;gap:4px;font-size:13px;color:var(--mut);font-variant-numeric:tabular-nums}
+.ib2{width:40px;height:40px;border-radius:12px;border:1px solid var(--bd);background:transparent;display:grid;place-items:center;cursor:pointer;color:var(--pri)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:480px}th,td{padding:9px 6px;border-bottom:1px solid var(--bd);text-align:center;font-size:14px}td:first-child,th:first-child{text-align:left}th{color:var(--mut);font-size:12.5px}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#047857,#0d9488)}
+.login .card{width:100%;max-width:360px;padding:26px;text-align:center}.logo{width:68px;height:68px;border-radius:20px;margin:0 auto 12px;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,#059669,#0d9488)}
+.inp{position:relative;margin:10px 0}.inp svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--mut)}.inp input{padding-left:42px}
+.modal{position:fixed;inset:0;background:#000c;display:flex;align-items:center;justify-content:center;z-index:20;padding:12px}
+.modal>div{background:var(--card);border-radius:20px;padding:16px;width:100%;max-width:480px;max-height:94%;overflow:auto}
+.vb{position:relative;border-radius:16px;overflow:hidden;background:#000}.vb video{width:100%;display:block}.vb canvas{position:absolute;inset:0;width:100%;height:100%}
+.ph{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.ph img{width:62px;height:62px;border-radius:12px;object-fit:cover}
+.lb{font-size:12.5px;color:var(--mut);margin:10px 0 4px;display:block}
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#06201a;color:#fff;padding:11px 18px;border-radius:24px;display:none;z-index:30;max-width:90%;box-shadow:0 8px 24px #0006}
+</style></head><body>
+<div id="app"></div><div id="toast"></div>
+<script>
+const MUS=['https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/','https://raw.githubusercontent.com/vladmandic/face-api/master/model/','https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights/'];
+const P={users:'<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',check:'<path d="M20 6 9 17l-5-5"/>',clock:'<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>',x:'<path d="M18 6 6 18"/><path d="m6 6 12 12"/>',scan:'<path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/>',plus:'<path d="M5 12h14"/><path d="M12 5v14"/>',chart:'<path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>',trash:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',out:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/>',login:'<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/>',cam:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/>',lock:'<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',user:'<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',list:'<rect width="8" height="4" x="8" y="2" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',up:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5"/><path d="M12 3v12"/>',flip:'<path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/><path d="M3 21v-5h5"/>',shield:'<path d="M20 13c0 5-3.5 7.5-7.7 8.9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/>',send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',edit:'<path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>',sl:'<path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/>'};
+const I=(n,s=20)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${P[n]}</svg>`;
+let S={teachers:[],rec:{}},auth=false,tab='now',date=iso(new Date()),fs='idle',mp=null;
+try{S=JSON.parse(localStorage.getItem('tc')||'null')||S;auth=localStorage.getItem('tca')==='1'}catch(e){}
+S.teachers=S.teachers||[];S.rec=S.rec||{};S.cfg=Object.assign({inT:'08:45',outT:'15:00'},S.cfg||{});S.tg=Object.assign({tok:'',chat:'@maktab10id'},S.tg||{});
+S.teachers.forEach(t=>{t.ds=t.ds||[]});
+function save(){try{localStorage.setItem('tc',JSON.stringify(S))}catch(e){toast('Xotira to‘ldi!')}}
+function iso(d){const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
+function nowT(sec){const n=new Date(),z=x=>String(x).padStart(2,'0');return z(n.getHours())+':'+z(n.getMinutes())+(sec?':'+z(n.getSeconds()):'')}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3000)}
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function R(d,id){const a=(S.rec[d]=S.rec[d]||{});return a[id]=a[id]||{}}
+function calc(id,d){const r=(S.rec[d]||{})[id]||{};let a,o=null;
+if(r.sab)a={k:'sab',t:'Sababli'};else if(!r.in)a={k:'no',t:'Kelmadi'};else a=r.in<=S.cfg.inT?{k:'ok',t:'Vaqtida'}:{k:'late',t:'Kech qoldi'};
+if(r.out)o=r.out<S.cfg.outT?{k:'early',t:'Erta ketdi'}:{k:'done',t:'Ketdi'};return{r,a,o}}
+function avh(t,z=54){return t.p?`<img class="av" style="width:${z}px;height:${z}px" src="${t.p}">`:`<div class="av" style="width:${z}px;height:${z}px">${esc((t.f[0]||'')+(t.n[0]||''))}</div>`}
+function chip(){const m={idle:['shield','Face ID: kutilmoqda'],load:['clock','Face ID yuklanmoqda…'],ok:['check','Face ID tayyor'],fail:['x','Face ID: yuklanmadi']}[fs];return`<span class="fchip">${I(m[0],13)}${m[1]}</span>`}
+function updChip(){document.querySelectorAll('.fchip').forEach(e=>e.outerHTML=chip())}
+function tiles(d){const c={ok:0,late:0,no:0,sab:0,early:0};S.teachers.forEach(t=>{const x=calc(t.id,d);c[x.a.k]++;if(x.o&&x.o.k==='early')c.early++});
+const L=[['Jami',S.teachers.length,'tx'],['Vaqtida',c.ok,'ok'],['Kech qoldi',c.late,'late'],['Kelmadi',c.no,'no'],['Sababli',c.sab,'sab'],['Erta ketdi',c.early,'early']];
+return`<div class="tl">${L.map(l=>`<div><b style="color:var(--${l[2]})">${l[1]}</b><span>${l[0]}</span></div>`).join('')}</div>`}
+function render(){const a=document.getElementById('app');
+if(!auth){a.innerHTML=`<div class="login"><div class="card"><div class="logo">${I('scan',34)}</div><h2 style="margin:0 0 4px">Ustozlar davomati</h2><p class="mut" style="margin:0 0 14px">Administrator paneliga kirish</p><div class="inp">${I('user',18)}<input id="lg" placeholder="${CLOUD?'Email':'Login'}" autocapitalize="off" autocomplete="off"></div><div class="inp">${I('lock',18)}<input id="pw" type="password" placeholder="Parol"></div><button class="btn w" onclick="login()">Kirish</button></div></div>`;return}
+const d=date,T=S.teachers;
+let h=`<div class="top"><div class="brand"><div class="lg">${I('users',20)}</div><div><b>Ustozlar davomati</b><small>${chip()} ${cchip()}</small></div></div><div class="clk" id="clk">${nowT(true)}</div><button class="ib" onclick="cfg()" aria-label="Sozlamalar">${I('sl')}</button><button class="ib" onclick="logout()" aria-label="Chiqish">${I('out')}</button></div>
+<div class="wrap"><div class="seg">${[['now','Bugun','list'],['tch','Ustozlar','users'],['rep','Hisobot','chart']].map(t=>`<button class="${tab==t[0]?'on':''}" onclick="tab='${t[0]}';render()">${I(t[2],18)}${t[1]}</button>`).join('')}</div>`;
+if(tab=='now'){h+=`<div class="card"><div class="row"><input type="date" value="${d}" onchange="chDate(this.value)" style="flex:1;min-width:150px"><div class="rule">${I('clock',16)}<span>Kelish: <b>${S.cfg.inT}</b> gacha · Ketish: <b>${S.cfg.outT}</b> dan keyin</span></div></div>
+<div class="row" style="margin-top:10px"><button class="btn" onclick="scan('in')">${I('login')} Kelishni skanerlash</button><button class="btn o" onclick="scan('out')">${I('out')} Ketishni skanerlash</button></div></div>`;
+if(!S.tg.tok)h+=`<div class="card" style="border-color:var(--late)"><b>Telegram ulanmagan.</b> <span class="mut">Tepadagi sozlamalar (⚙) tugmasidan bot tokenini kiriting.</span></div>`;
+h+=tiles(d);if(!T.length)h+=`<div class="card mut">Avval “Ustozlar” bo‘limida ustozlarni qo‘shing.</div>`;
+T.forEach(t=>{const x=calc(t.id,d),r=x.r;h+=`<div class="tr s-${x.a.k}">${avh(t)}<div class="nm">${esc(t.f)} ${esc(t.n)}<div class="ln"><span class="bd ${x.a.k}">${x.a.t}</span>${r.in?`<span class="tm">${I('login',14)}${r.in}</span>`:''}${x.o?`<span class="bd ${x.o.k}">${x.o.t}</span><span class="tm">${I('out',14)}${r.out}</span>`:''}</div>${r.note?`<div class="mut" style="font-weight:400">${esc(r.note)}</div>`:''}</div><button class="ib2" onclick="edit('${t.id}')" aria-label="Tahrirlash">${I('edit',18)}</button></div>`});
+if(T.length)h+=`<button class="btn w" style="margin-top:6px" onclick="sendRep()">${I('send')} Hisobotni Telegramga yuborish</button>`}
+if(tab=='tch'){h+=`<button class="btn w" style="margin-bottom:12px" onclick="addT()">${I('plus')} Ustoz qo‘shish</button>`;
+if(!T.length)h+=`<div class="card mut">Hali ustoz yo‘q</div>`;
+T.forEach(t=>{h+=`<div class="tr">${avh(t)}<div class="nm">${esc(t.f)} ${esc(t.n)}<div class="mut" style="font-weight:400">${t.ds.length?'Face ID: '+t.ds.length+' ta yuz namunasi':'Yuz o‘rganilmagan'}</div></div><button class="btn r s" onclick="delT('${t.id}')" aria-label="O‘chirish">${I('trash',16)}</button></div>`})}
+if(tab=='rep'){h+=`<div class="card"><input type="date" value="${d}" onchange="chDate(this.value)"></div>`+tiles(d)+`<div class="card tw"><table><tr><th>Ustoz</th><th>Keldi</th><th>Ketdi</th><th>Holat</th></tr>`;
+T.forEach(t=>{const x=calc(t.id,d);h+=`<tr><td>${esc(t.f)} ${esc(t.n)}</td><td>${x.r.in||'–'}</td><td>${x.r.out||'–'}</td><td><span class="bd ${x.a.k}">${x.a.t}</span>${x.o&&x.o.k=='early'?` <span class="bd early">Erta ketdi</span>`:''}</td></tr>`});
+if(!T.length)h+=`<tr><td colspan="4" class="mut">Ustoz yo‘q</td></tr>`;
+h+=`</table></div><button class="btn w" onclick="sendRep()">${I('send')} Hammasini Telegramga yuborish</button>`}
+a.innerHTML=h+'</div>'}
+setInterval(()=>{const c=document.getElementById('clk');if(c)c.textContent=nowT(true)},1000);
+async function login(){if(CLOUD){try{await sbLogin(lg.value.trim(),pw.value);auth=true;try{localStorage.setItem('tca','1')}catch(e){}render();cloudBoot();loadM()}catch(e){toast(e.message||'Kirish xato')}return}const n=v=>v.toLowerCase().replace(/\s+/g,'');if(n(lg.value)==='10maktab'&&n(pw.value)==='10maktab'){auth=true;try{localStorage.setItem('tca','1')}catch(e){}render();loadM()}else toast('Login yoki parol xato')}
+function logout(){auth=false;if(CLOUD){tokA=tokR=null;try{localStorage.removeItem('sbt_'+SITE)}catch(e){}}try{localStorage.setItem('tca','0')}catch(e){}render()}
+function delT(id){if(!confirm('O‘chirilsinmi?'))return;S.teachers=S.teachers.filter(t=>t.id!==id);save();mk('t:'+id);render()}
+/* ===== BAZA (Supabase) — bo'sh qoldirsangiz sayt faqat shu brauzerda ishlaydi ===== */
+const SB_URL='https://igirewbkxugpfnrrnmww.supabase.co',SB_KEY='sb_publishable_rwVX3grPQzMvs6rk5K5auQ_VnYE68LE';
+const CLOUD=!!(SB_URL&&SB_KEY),SITE='teachers';
+P.cloud='<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>';
+let tokA=null,tokR=null,tokExp=0,dirty=new Set(S.dirty||[]),syncing=false,cs='sync';
+try{const j=JSON.parse(localStorage.getItem('sbt_'+SITE)||'null');if(j){tokA=j.a;tokR=j.r;tokExp=j.e}}catch(e){}
+function setTok(j){tokA=j.access_token;tokR=j.refresh_token;tokExp=Date.now()+Math.max(30,(j.expires_in||3600)-60)*1000;try{localStorage.setItem('sbt_'+SITE,JSON.stringify({a:tokA,r:tokR,e:tokExp}))}catch(e){}}
+async function sbAuth(grant,body){const r=await fetch(SB_URL+'/auth/v1/token?grant_type='+grant,{method:'POST',headers:{apikey:SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});const j=await r.json().catch(()=>({}));if(!r.ok)throw new Error(j.error_description||j.msg||'Kirish xato');setTok(j)}
+const sbLogin=(email,pw)=>sbAuth('password',{email,password:pw});
+async function sb(path,o={}){if(!tokA)throw new Error('Kirish kerak');if(Date.now()>tokExp&&tokR)await sbAuth('refresh_token',{refresh_token:tokR});
+const r=await fetch(SB_URL+'/rest/v1/'+path,{...o,headers:{apikey:SB_KEY,Authorization:'Bearer '+tokA,'Content-Type':'application/json',...(o.headers||{})}});
+if(!r.ok){const t=await r.text();throw new Error(t.slice(0,140)||('HTTP '+r.status))}
+return r.status===204?null:await r.json().catch(()=>null)}
+async function sbGet(like){let out=[],from=0;for(;;){const rows=await sb('kv?site=eq.'+SITE+'&k=like.'+encodeURIComponent(like)+'&select=k,v&order=k',{headers:{'Range-Unit':'items',Range:from+'-'+(from+999)}})||[];out=out.concat(rows);if(rows.length<1000)break;from+=1000}return out}
+function cchip(){if(!CLOUD)return'';const m={sync:['clock','Baza: yuklanmoqda…'],ok:['cloud','Baza ulangan'],err:['x','Baza xato']}[cs]||['cloud','Baza'];return`<span class="fchip2">${I(m[0],13)}${m[1]}</span>`}
+function cstat(){document.querySelectorAll('.fchip2').forEach(e=>e.outerHTML=cchip())}
+function cloudErr(e){cs='err';if(!cloudErr.t||Date.now()-cloudErr.t>30000){cloudErr.t=Date.now();toast('Baza xatosi: '+(e&&e.message||e))}cstat()}
+function mk(k){if(!CLOUD)return;dirty.add(k);S.dirty=[...dirty];save();clearTimeout(mk._t);mk._t=setTimeout(()=>flush().catch(cloudErr),400)}
+async function flush(){if(!CLOUD||!tokA||syncing||!dirty.size)return true;syncing=true;let ok=true;
+try{for(const k of [...dirty]){try{const v=CL.get(k);
+if(v==null)await sb('kv?site=eq.'+SITE+'&k=eq.'+encodeURIComponent(k),{method:'DELETE'});
+else await sb('kv?on_conflict=site,k',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({site:SITE,k,v,updated_at:new Date().toISOString()})});
+dirty.delete(k)}catch(e){ok=false;cloudErr(e);break}}}finally{syncing=false;S.dirty=[...dirty];save()}
+if(ok){cs='ok'}cstat();return ok}
+async function cloudBoot(){if(!CLOUD||!tokA)return;cs='sync';cstat();try{
+const mf='mig_'+SITE;if(!localStorage.getItem(mf)){CL.all().forEach(k=>dirty.add(k));S.dirty=[...dirty];save();localStorage.setItem(mf,'1')}
+if(!(await flush())||dirty.size)throw new Error('Ma’lumot bazaga yozilmadi');await CL.pull();cs='ok';save();render()}catch(e){cloudErr(e)}cstat()}
+function chDate(v){date=v;render();if(CLOUD&&tokA)CL.pull().then(c=>c&&render()).catch(cloudErr)}
+setInterval(async()=>{if(!CLOUD||!auth||!tokA||document.hidden||syncing)return;try{if(dirty.size)await flush();if(!dirty.size&&await CL.pull()&&!document.querySelector('.modal'))render();cs='ok'}catch(e){cloudErr(e)}cstat()},15000);
+const CL={sig:'',st:'',rd:{},
+all(){const a=['settings'];S.teachers.forEach(t=>a.push('t:'+t.id));for(const d in S.rec)for(const id in S.rec[d])a.push('r:'+d+':'+id);return a},
+get(k){if(k==='settings')return{cfg:S.cfg,tg:S.tg};const p=k.split(':');if(p[0]==='t')return S.teachers.find(t=>t.id===p[1])||null;const r=(S.rec[p[1]]||{})[p[2]];return r&&Object.keys(r).length?r:null},
+async pull(){let ch=false;
+const sig=((await sb('kv?site=eq.'+SITE+'&k=like.t:*&select=k,updated_at&order=k'))||[]).map(x=>x.k+x.updated_at).join('|');
+if(sig!==CL.sig){const rows=await sbGet('t:*');S.teachers=rows.map(x=>Object.assign({ds:[]},x.v));CL.sig=sig;ch=true}
+const s=await sb('kv?site=eq.'+SITE+'&k=eq.settings&select=v');
+if(s&&s[0]){const j=JSON.stringify(s[0].v);if(j!==CL.st){S.cfg=Object.assign({inT:'08:45',outT:'15:00'},s[0].v.cfg||{});S.tg=Object.assign({tok:'',chat:'@maktab10id'},s[0].v.tg||{});CL.st=j;ch=true}}else mk('settings');
+const rr=await sbGet('r:'+date+':*'),o={};rr.forEach(x=>{o[x.k.split(':')[2]]=x.v});const j2=JSON.stringify(o);
+if(j2!==CL.rd[date]){S.rec[date]=o;CL.rd[date]=j2;ch=true}
+if(ch)save();return ch}};
+function modal(html){const m=document.createElement('div');m.className='modal';m.innerHTML='<div>'+html+'</div>';document.body.appendChild(m);return m}
+function limg(src){return new Promise((r,j)=>{const i=new Image();i.onload=()=>r(i);i.onerror=j;i.src=src})}
+function url(i,max,q){const w=i.naturalWidth||i.videoWidth||i.width,hh=i.naturalHeight||i.videoHeight||i.height,s=Math.min(1,max/Math.max(w,hh)),c=document.createElement('canvas');c.width=w*s;c.height=hh*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);return c.toDataURL('image/jpeg',q)}
+const DO=()=>new faceapi.TinyFaceDetectorOptions({inputSize:416,scoreThreshold:.4});
+async function desc(img){const r=await faceapi.detectSingleFace(img,DO()).withFaceLandmarks(true).withFaceDescriptor();return r?Array.from(r.descriptor):null}
+function loadM(){if(fs==='ok')return Promise.resolve(true);if(mp)return mp;fs='load';updChip();
+mp=(async()=>{try{if(!window.faceapi)throw 0;try{await faceapi.tf.setBackend('webgl')}catch(e){}await faceapi.tf.ready();
+for(const u of MUS){try{await Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri(u),faceapi.nets.faceLandmark68TinyNet.loadFromUri(u),faceapi.nets.faceRecognitionNet.loadFromUri(u)]);fs='ok';updChip();return true}catch(e){}}throw 0}catch(e){fs='fail';mp=null;updChip();return false}})();return mp}
+/* ---- Telegram ---- */
+async function tgSend(txt,html,quiet){const g=S.tg;if(!g.tok||!g.chat){if(!quiet)toast('Telegram sozlanmagan (⚙ tugmasi)');return false}
+try{const b={chat_id:g.chat,text:txt};if(html)b.parse_mode='HTML';const r=await fetch('https://api.telegram.org/bot'+g.tok+'/sendMessage',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});const j=await r.json();if(!j.ok)throw new Error(j.description);return true}catch(e){toast('Telegramga yuborilmadi: '+(e.message||'xato'));return false}}
+function ntf(id,d,kind){const t=S.teachers.find(z=>z.id===id);if(!t)return;const x=calc(id,d),r=x.r;let s='👨‍🏫 '+t.f+' '+t.n+'\n';
+if(kind==='in')s+='🕗 Kelgan payt: '+r.in+'\n📌 Holat: '+x.a.t;
+else if(kind==='out')s+='🚪 Ketgan payt: '+r.out+'\n📌 Holat: '+(x.o?x.o.t:'');
+else{s='✏️ Qo‘lda o‘zgartirildi\n'+s+'🕗 Kelgan: '+(r.in||'—')+'\n🚪 Ketgan: '+(r.out||'—')+'\n📌 Holat: '+x.a.t+(x.o&&x.o.k==='early'?' · Erta ketdi':'')+(r.note?'\n📝 '+r.note:'')}
+tgSend(s+'\n📅 '+d,false,true)}
+const he=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+async function sendRep(){const T=S.teachers,d=date;if(!T.length)return toast('Ustoz yo‘q');if(!S.tg.tok)return toast('Avval Telegramni sozlang (⚙)');
+const c={ok:0,late:0,no:0,sab:0,early:0},em={ok:'✅',late:'⏰',no:'❌',sab:'📄'},rows=[];
+T.forEach((t,i)=>{const x=calc(t.id,d);c[x.a.k]++;const er=x.o&&x.o.k==='early';if(er)c.early++;rows.push((i+1)+'. '+em[x.a.k]+' '+t.f+' '+t.n+' | '+(x.r.in||'—')+' | '+(x.r.out||'—')+' | '+x.a.t+(er?', erta ketdi':'')+(x.r.note?' ('+x.r.note+')':''))});
+let ok=await tgSend('📋 <b>USTOZLAR DAVOMATI</b> · '+d+'\nKelish: '+S.cfg.inT+' gacha · Ketish: '+S.cfg.outT+' dan keyin\n\nJami: <b>'+T.length+'</b>\n✅ Vaqtida: '+c.ok+'\n⏰ Kech qoldi: '+c.late+'\n❌ Kelmadi: '+c.no+'\n📄 Sababli: '+c.sab+'\n🚪 Erta ketdi: '+c.early+'\n\n<i>Ustoz | Keldi | Ketdi | Holat</i>',true);
+let buf='';const parts=[];rows.forEach(r=>{if((buf+r).length>3400){parts.push(buf);buf=''}buf+=r+'\n'});if(buf)parts.push(buf);
+for(const p of parts){if(!ok)break;ok=await tgSend('<pre>'+he(p)+'</pre>',true)}
+if(ok)toast('Hisobot Telegramga yuborildi')}
+function cfg(){const m=modal(`<h3 style="margin-top:0">Sozlamalar</h3><label class="lb">Telegram bot tokeni</label><div class="inp" style="margin-top:0">${I('lock',18)}<input id="tk" placeholder="123456:AA..." value="${esc(S.tg.tok)}" autocomplete="off"></div><label class="lb">Kanal</label><div class="inp" style="margin-top:0">${I('send',18)}<input id="ch" placeholder="@kanal_nomi" value="${esc(S.tg.chat)}"></div>
+<div class="row"><div style="flex:1"><label class="lb">Kelish vaqti (shundan keyin — kech)</label><input id="i1" type="time" value="${S.cfg.inT}"></div><div style="flex:1"><label class="lb">Ketish vaqti (shundan oldin — erta)</label><input id="o1" type="time" value="${S.cfg.outT}"></div></div>
+<div class="row" style="margin-top:14px"><button class="btn g" id="x">Yopish</button><button class="btn g" id="ts">Test</button><button class="btn" id="sv">Saqlash</button></div>`);
+const q=s=>m.querySelector(s),rd=()=>{S.tg={tok:q('#tk').value.trim(),chat:q('#ch').value.trim()};S.cfg={inT:q('#i1').value||'08:45',outT:q('#o1').value||'15:00'};save();mk('settings')};
+q('#x').onclick=()=>m.remove();q('#sv').onclick=()=>{rd();m.remove();render()};q('#ts').onclick=async()=>{rd();if(await tgSend('✅ Ustozlar davomati: ulanish muvaffaqiyatli'))toast('Test xabar yuborildi')}}
+/* ---- Qo'lda tahrirlash ---- */
+function edit(id){const t=S.teachers.find(z=>z.id===id),r=((S.rec[date]||{})[id])||{};
+const m=modal(`<h3 style="margin-top:0">${esc(t.f)} ${esc(t.n)} · ${date}</h3><div class="row"><div style="flex:1"><label class="lb">Kelgan vaqt</label><input id="a" type="time" value="${r.in||''}"></div><div style="flex:1"><label class="lb">Ketgan vaqt</label><input id="b" type="time" value="${r.out||''}"></div></div>
+<label class="lb" style="display:flex;align-items:center;gap:8px;font-size:15px;color:var(--tx)"><input id="s" type="checkbox" style="width:20px;height:20px" ${r.sab?'checked':''}> Sababli (ishi chiqib qolgan)</label><label class="lb">Izoh</label><input id="n" placeholder="Masalan: tuman hokimiyatiga chaqirilgan" value="${esc(r.note||'')}">
+<div class="row" style="margin-top:14px"><button class="btn g" id="x">Bekor</button><button class="btn r" style="flex:1" id="cl">Tozalash</button><button class="btn" id="sv">Saqlash</button></div>`);
+const q=s=>m.querySelector(s);q('#x').onclick=()=>m.remove();
+q('#cl').onclick=()=>{if(S.rec[date])delete S.rec[date][id];save();mk('r:'+date+':'+id);m.remove();render()};
+q('#sv').onclick=()=>{const x=R(date,id);x.in=q('#a').value||undefined;x.out=q('#b').value||undefined;x.sab=q('#s').checked||undefined;x.note=q('#n').value.trim()||undefined;
+for(const k of ['in','out','sab','note'])if(x[k]===undefined)delete x[k];save();mk('r:'+date+':'+id);m.remove();render();ntf(id,date,'edit')}}
+/* ---- Ustoz qo'shish ---- */
+function addT(){let ph=[],cs=null;const m=modal(`<h3 style="margin-top:0">Yangi ustoz</h3><div class="inp">${I('user',18)}<input id="nf" placeholder="Ism"></div><div class="inp">${I('user',18)}<input id="nn" placeholder="Familya"></div>
+<div class="row"><label class="btn g" style="flex:1">${I('up')} Rasm yuklash<input id="np" type="file" accept="image/*" multiple hidden></label><button class="btn g" style="flex:1" id="cm">${I('cam')} Kameradan</button></div>
+<div id="cb" hidden style="margin-top:10px"><div class="vb"><video id="cv" playsinline muted autoplay></video></div><button class="btn w" id="sn" style="margin-top:8px">${I('cam')} Suratga olish</button></div>
+<div class="ph" id="ph"></div><p class="mut">Aniqlik uchun 2–3 ta rasm qo‘shing: yorug‘, to‘g‘ri qaragan, yuz yopilmagan.</p>
+<div class="row"><button class="btn g" id="x">Bekor</button><button class="btn" id="ok">Saqlash</button></div>`);
+const q=s=>m.querySelector(s),stop=()=>{cs&&cs.getTracks().forEach(t=>t.stop());cs=null};const rp=()=>q('#ph').innerHTML=ph.map(p=>`<img src="${p}">`).join('');
+q('#x').onclick=()=>{stop();m.remove()};
+q('#np').onchange=async e=>{for(const f of e.target.files){const i=await limg(URL.createObjectURL(f));ph.push(url(i,640,.85))}rp()};
+q('#cm').onclick=async()=>{try{cs=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});q('#cv').srcObject=cs;q('#cb').hidden=false}catch(e){toast('Kameraga ruxsat berilmadi')}};
+q('#sn').onclick=()=>{const v=q('#cv');if(!v.videoWidth)return;ph.push(url(v,640,.85));rp()};
+q('#ok').onclick=async()=>{const f=q('#nf').value.trim(),n=q('#nn').value.trim();if(!f||!n||!ph.length)return toast('Ism, familya va kamida 1 rasm kerak');
+const b=q('#ok');b.disabled=true;b.textContent='Yuz o‘rganilmoqda…';stop();const ds=[];
+if(await loadM()){for(const p of ph){try{const d=await desc(await limg(p));if(d)ds.push(d)}catch(e){}}toast(ds.length+'/'+ph.length+' rasmda yuz topildi')}else toast('Face ID yuklanmadi — yuz keyinroq o‘rganiladi');
+const av=await limg(ph[0]);const nt={id:'t'+Date.now(),f,n,p:url(av,240,.8),ds};S.teachers.push(nt);save();mk('t:'+nt.id);m.remove();render()}}
+/* ---- Skaner ---- */
+async function scan(mode){const T=S.teachers;if(!T.length)return toast('Avval ustoz qo‘shing');date=iso(new Date());
+const m=modal(`<h3 style="margin:0 0 10px">${mode==='in'?'Kelishni':'Ketishni'} skanerlash</h3><div class="vb"><video id="v" playsinline muted autoplay></video><canvas id="cn"></canvas></div>
+<div class="row" style="margin:10px 0"><button class="btn g s" id="fl">${I('flip',16)} Kamera</button></div><div id="sm" class="mut">Modellar yuklanmoqda…</div><div id="rl" style="margin:8px 0"></div><button class="btn g w" id="x">Yopish</button>`);
+const q=s=>m.querySelector(s);let run=true,stream=null,face='user';const hits={},seen=[];
+const stop=()=>{run=false;stream&&stream.getTracks().forEach(t=>t.stop())};q('#x').onclick=()=>{stop();m.remove();render()};const say=t=>q('#sm').innerHTML=t;
+if(!await loadM()){say(`<b style="color:var(--no)">Face ID modellari yuklanmadi.</b> Sahifa internetga ulangan va https hostingda ochilgan bo‘lishi kerak. Hozircha vaqtni qo‘lda kiriting (qalam tugmasi).`);return}
+say('Yuzlar tayyorlanmoqda…');
+for(const t of T){if(!t.ds.length&&t.p){try{const d=await desc(await limg(t.p));if(d){t.ds.push(d);mk('t:'+t.id)}}catch(e){}}}save();
+const ok=T.filter(t=>t.ds.length);if(!ok.length){say('Hech bir ustozning yuzi o‘rganilmagan. Aniq rasm bilan qayta qo‘shing.');return}
+const fm=new faceapi.FaceMatcher(ok.map(t=>new faceapi.LabeledFaceDescriptors(t.id,t.ds.map(d=>new Float32Array(d)))),0.55);
+const v=q('#v'),cn=q('#cn'),cx=cn.getContext('2d');
+async function cam(){stream&&stream.getTracks().forEach(t=>t.stop());try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:face,width:{ideal:1280},height:{ideal:720}},audio:false});v.srcObject=stream;await v.play();return true}catch(e){say('<b style="color:var(--no)">Kameraga ruxsat berilmadi.</b>');return false}}
+q('#fl').onclick=async()=>{face=face==='user'?'environment':'user';await cam()};
+if(!await cam())return;say('Kameraga qarang — yuz avtomatik taniladi.');
+const rl=()=>q('#rl').innerHTML=seen.map(s=>`<div class="tr s-ok" style="margin:4px 0;padding:8px">${avh(s.t,38)}<div class="nm">${esc(s.t.f)} ${esc(s.t.n)}<div class="ln"><span class="bd ${s.k}">${s.tx}</span><span class="tm">${s.time}</span></div></div></div>`).join('');
+while(run){try{if(v.videoWidth){cn.width=v.videoWidth;cn.height=v.videoHeight;cx.clearRect(0,0,cn.width,cn.height);
+const rs=await faceapi.detectAllFaces(v,DO()).withFaceLandmarks(true).withFaceDescriptors();
+for(const x of rs){const bx=x.detection.box,b=fm.findBestMatch(x.descriptor),good=b.label!=='unknown',t=good&&T.find(z=>z.id===b.label);
+cx.lineWidth=4;cx.strokeStyle=good?'#10b981':'#ef4444';cx.strokeRect(bx.x,bx.y,bx.width,bx.height);cx.font='bold 26px system-ui';cx.fillStyle=good?'#10b981':'#ef4444';cx.fillText(good?t.f+' '+t.n:'Noma’lum',bx.x,Math.max(26,bx.y-8));
+if(good){hits[b.label]=(hits[b.label]||0)+1;const d=iso(new Date()),r=R(d,b.label);
+if(hits[b.label]>=2&&!seen.find(s=>s.t.id===t.id)){
+if(mode==='in'){if(!r.in){r.in=nowT();save();mk('r:'+d+':'+t.id);ntf(t.id,d,'in');const a=calc(t.id,d).a;seen.unshift({t,k:a.k,tx:a.t,time:r.in});toast((a.t)+': '+t.f+' '+t.n+' · '+r.in)}else{seen.unshift({t,k:'done',tx:'Allaqachon kelgan',time:r.in});toast(t.f+' bugun allaqachon kelgan ('+r.in+')')}}
+else{if(!r.out){r.out=nowT();save();mk('r:'+d+':'+t.id);ntf(t.id,d,'out');const o=calc(t.id,d).o;seen.unshift({t,k:o.k,tx:o.t,time:r.out});toast(o.t+': '+t.f+' '+t.n+' · '+r.out)}else{seen.unshift({t,k:'done',tx:'Allaqachon ketgan',time:r.out})}}
+rl()}}}}}catch(e){}
+await sleep(200)}}
+if(CLOUD&&!tokA)auth=false;
+if(auth)loadM();
+render();
+if(CLOUD&&auth)cloudBoot();
+</script></body></html>
